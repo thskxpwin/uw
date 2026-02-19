@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow,noarchive" />
+  <title>Waiver</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; background:#f6f7f9; }
+    .wrap { max-width: 900px; margin: 0 auto; padding: 20px; }
+    .card { background:#fff; border-radius: 12px; padding: 18px; box-shadow: 0 2px 10px rgba(0,0,0,.06); }
+    h1 { margin: 0 0 10px; font-size: 22px; }
+    p { line-height: 1.35; }
+    label { display:block; font-weight: 600; margin-top: 12px; }
+    input, textarea { width: 100%; box-sizing: border-box; padding: 10px; border:1px solid #cfd6dd; border-radius: 10px; font-size: 16px; }
+    textarea { min-height: 110px; }
+    .row { display:grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 700px){ .row{ grid-template-columns: 1fr; } }
+    .sigbox { margin-top: 10px; border: 2px dashed #b7c0c9; border-radius: 12px; background:#fff; padding: 10px; }
+    canvas { width: 100%; height: 180px; border-radius: 10px; background: #fff; touch-action: none; }
+    .btnrow { display:flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+    button { padding: 12px 14px; border: 0; border-radius: 10px; font-size: 16px; cursor:pointer; }
+    .primary { background:#1b66d2; color:#fff; }
+    .secondary { background:#e9eef5; }
+    .warn { color:#a40000; font-weight:700; margin-top:10px; }
+    .ok { color:#0b6b2a; font-weight:700; margin-top:10px; }
+    .blocked { text-align:center; padding: 60px 20px; }
+    .small { font-size: 13px; color:#4b5563; }
+    .checkline { display:flex; gap:10px; align-items:flex-start; margin-top: 12px; }
+    .checkline input { width: auto; margin-top: 4px; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div id="blocked" class="card blocked" style="display:none;">
+    <h1>Access blocked</h1>
+    <p>This waiver page is intended for kiosk use only.</p>
+  </div>
+
+  <div id="app" class="card" style="display:none;">
+    <h1>Waiver & Release</h1>
+
+    <h2 style="font-size:18px;margin:14px 0 8px;">Waiver Text</h2>
+    <div style="padding:12px;border:1px solid #e5e7eb;border-radius:12px;background:#fbfbfc;">
+      <p><b>RELEASE OF LIABILITY</b></p>
+      <p>
+        By signing below, I acknowledge and agree that I am voluntarily participating in the activity/event and
+        assume all risks associated with participation. I release and hold harmless the organizers, sponsors,
+        and affiliated parties from any and all claims, liabilities, demands, actions, or causes of action
+        arising out of or related to any loss, damage, or injury that may be sustained.
+      </p>
+      <p>
+        I affirm that the information I provide is true and that my signature below constitutes my electronic
+        signature and consent to this waiver.
+      </p>
+    </div>
+
+    <!-- StaticForms endpoint -->
+    <form id="waiverForm" action="https://api.staticforms.dev/submit" method="POST">
+      <!-- CHANGE THIS -->
+      <input type="hidden" name="apiKey" value="sf_k5g50e4e96a6a56gnah9jhfm" />
+
+      <!-- Optional redirects (leave commented out unless you create those pages) -->
+      <!-- <input type="hidden" name="redirectTo" value="https://thskxpwin.github.io/uw/success.html" /> -->
+      <!-- <input type="hidden" name="errorRedirectTo" value="https://thskxpwin.github.io/uw/error.html" /> -->
+
+      <!-- Hidden fields we fill in -->
+      <input type="hidden" name="signature_base64_png" id="signature_base64_png" />
+      <input type="hidden" name="signed_timestamp_local" id="signed_timestamp_local" />
+
+      <div class="row">
+        <div>
+          <label for="fullName">Full Name</label>
+          <input id="fullName" name="full_name" required autocomplete="name" />
+        </div>
+        <div>
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" required autocomplete="email" />
+        </div>
+      </div>
+
+      <label for="address">Address</label>
+      <textarea id="address" name="address" required autocomplete="street-address"></textarea>
+
+      <div class="checkline">
+        <input id="agree" type="checkbox" required />
+        <label for="agree" style="margin:0;font-weight:600;">
+          I have read and agree to the waiver terms above. I understand this is an electronic signature.
+        </label>
+      </div>
+
+      <label>Signature (draw with finger)</label>
+      <div class="sigbox">
+        <canvas id="sigCanvas"></canvas>
+        <div class="btnrow">
+          <button type="button" class="secondary" id="clearBtn">Clear signature</button>
+        </div>
+        <div class="small">Tip: Sign as you would normally. Clearing is allowed before submission.</div>
+      </div>
+
+      <div class="btnrow">
+        <button type="submit" class="primary" id="submitBtn">Submit Waiver</button>
+      </div>
+
+      <div id="msg" class="warn" style="display:none;"></div>
+      <div id="ok" class="ok" style="display:none;"></div>
+    </form>
+  </div>
+</div>
+
+<script>
+(() => {
+  // CHANGE THIS (or keep it)
+  const KIOSK_TOKEN = "chapel";
+
+  const params = new URLSearchParams(location.search);
+  const token = (params.get("k") || "").trim();
+
+  const blocked = document.getElementById("blocked");
+  const app = document.getElementById("app");
+  if (token !== KIOSK_TOKEN) { blocked.style.display = "block"; return; }
+  app.style.display = "block";
+
+  const canvas = document.getElementById("sigCanvas");
+  const ctx = canvas.getContext("2d");
+
+  function resizeCanvas() {
+    const rect = canvas.getBoundingClientRect();
+    const ratio = Math.max(window.devicePixelRatio || 1, 1);
+    canvas.width = Math.floor(rect.width * ratio);
+    canvas.height = Math.floor(rect.height * ratio);
+    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    ctx.lineWidth = 2.2;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = "#111827";
+  }
+
+  requestAnimationFrame(resizeCanvas);
+  window.addEventListener("resize", () => { resizeCanvas(); hasInk = false; });
+
+  let drawing = false, hasInk = false;
+
+  function getPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const t = e.touches && e.touches[0];
+    const x = (t ? t.clientX : e.clientX) - rect.left;
+    const y = (t ? t.clientY : e.clientY) - rect.top;
+    return { x, y };
+  }
+
+  function start(e){ e.preventDefault(); drawing = true; const p=getPos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); }
+  function move(e){ if(!drawing) return; e.preventDefault(); const p=getPos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); hasInk=true; }
+  function end(e){ if(!drawing) return; e.preventDefault(); drawing=false; ctx.closePath(); }
+
+  canvas.addEventListener("mousedown", start);
+  canvas.addEventListener("mousemove", move);
+  canvas.addEventListener("mouseup", end);
+  canvas.addEventListener("mouseleave", end);
+  canvas.addEventListener("touchstart", start, { passive:false });
+  canvas.addEventListener("touchmove", move, { passive:false });
+  canvas.addEventListener("touchend", end, { passive:false });
+
+  document.getElementById("clearBtn").addEventListener("click", () => {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    hasInk=false;
+  });
+
+  const form = document.getElementById("waiverForm");
+  const msg = document.getElementById("msg");
+  const ok = document.getElementById("ok");
+  const submitBtn = document.getElementById("submitBtn");
+
+  form.addEventListener("submit", (e) => {
+    msg.style.display = "none";
+    ok.style.display = "none";
+    msg.textContent = "";
+    ok.textContent = "";
+
+    if (!hasInk) {
+      e.preventDefault();
+      msg.textContent = "Please provide a signature before submitting.";
+      msg.style.display = "block";
+      return;
+    }
+
+    document.getElementById("signed_timestamp_local").value = new Date().toString();
+    document.getElementById("signature_base64_png").value =
+      canvas.toDataURL("image/png").replace(/^data:image\/png;base64,/, "");
+
+    // Optional: show a message immediately (StaticForms will redirect / reload depending on config)
+    submitBtn.textContent = "Submitting...";
+  });
+})();
+</script>
+</body>
+</html>
