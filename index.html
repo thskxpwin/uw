@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow,noarchive" />
+  <title>Waiver</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; background:#f6f7f9; }
+    .wrap { max-width: 900px; margin: 0 auto; padding: 20px; }
+    .card { background:#fff; border-radius: 12px; padding: 18px; box-shadow: 0 2px 10px rgba(0,0,0,.06); }
+    h1 { margin: 0 0 10px; font-size: 22px; }
+    p, li { line-height: 1.35; }
+    label { display:block; font-weight: 600; margin-top: 12px; }
+    input, textarea { width: 100%; box-sizing: border-box; padding: 10px; border:1px solid #cfd6dd; border-radius: 10px; font-size: 16px; }
+    textarea { min-height: 120px; }
+    .row { display:grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 700px){ .row{ grid-template-columns: 1fr; } }
+    .sigbox { margin-top: 10px; border: 2px dashed #b7c0c9; border-radius: 12px; background:#fff; padding: 10px; }
+    canvas { width: 100%; height: 180px; border-radius: 10px; background: #fff; touch-action: none; }
+    .btnrow { display:flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+    button { padding: 12px 14px; border: 0; border-radius: 10px; font-size: 16px; cursor:pointer; }
+    .primary { background:#1b66d2; color:#fff; }
+    .secondary { background:#e9eef5; }
+    .warn { color:#a40000; font-weight:700; margin-top:10px; }
+    .ok { color:#0b6b2a; font-weight:700; margin-top:10px; }
+    .small { font-size: 13px; color:#4b5563; }
+    .checkline { display:flex; gap:10px; align-items:flex-start; margin-top: 12px; }
+    .checkline input { width: auto; margin-top: 4px; }
+    .blocked { text-align:center; padding: 60px 20px; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div id="blocked" class="card blocked" style="display:none;">
+    <h1>Access blocked</h1>
+    <p>This waiver page is intended for kiosk use only.</p>
+  </div>
+
+  <div id="app" class="card" style="display:none;">
+    <h1>Waiver & Release</h1>
+
+    <p class="small">
+      This form is intended for use on the kiosk. Please read the waiver and sign below.
+    </p>
+
+    <h2 style="font-size:18px;margin:14px 0 8px;">Waiver Text</h2>
+    <div style="padding:12px;border:1px solid #e5e7eb;border-radius:12px;background:#fbfbfc;">
+      <p><b>RELEASE FOR SITE ACCESS</b></p>
+      <p><b>/Where J.E. Dunn Construction Company is the General Contractor</b></p>
+      <p>
+        
+	RELEASOR has requested access to the construction site on the USAFA Cadet Chapel Project, located at 2306 Sijan Drive, Colorado Springs, CO 80840 where J.E. Dunn Construction Company is the General Contractor, with the understanding that such Project is in an uncompleted state and that there may be hazards to which RELEASOR may be exposed.
+
+	IN CONSIDERATION of being permitted access to the Project construction site, RELEASOR, for herself/himself, her/his legal representatives, heirs and assigns, hereby releases and forever discharges J.E. Dunn Construction Company and the Owner of the above named Project, their officers, directors, employees and subcontractors, and each of them, herein referred to as RELEASEES, of and from any and every claim, demand, action or right of action, of whatever kind or nature, either in law or equity, arising from or by reason of any bodily injury, death or property damage resulting or arising from RELEASOR'S access to the site of the above named Project, even if caused by the negligent act or omission of RELEASEES.
+
+	RELEASOR understands and agrees that RELEASEES make no representation regarding the condition of the Project construction site.  RELEASOR takes the Project construction site “as is,” and recognizes and accepts any and all risks associated with accessing the Project construction site.
+
+	RELEASOR agrees to coordinate access to the site with J.E. Dunn Construction Company’s Project Manager and/or Superintendent on site.  Further, RELEASOR agrees that RELEASOR will be accompanied on the site by RELEASEES, or their representatives at all times.
+
+	RELEASOR is aware the Chapel building contains hazardous materials. While asbestos and lead containing materials have been abated (i.e., removed) from construction and tour areas, it is still present within the Chapel proper. Hudspeth Associates Inc. hazardous material report is available upon request.  
+	
+	This RELEASE contains the entire Agreement between the Parties hereto and the terms of this RELEASE are contractual and not a mere recital.
+
+	RELEASOR has carefully read the foregoing RELEASE and knows the contents thereof and signs this RELEASE as her/his own free act.
+
+	CAUTION:  THIS IS A FULL AND COMPLETE RELEASE.
+	READ CAREFULLY BEFORE SIGNING
+
+      </p>
+      <p>
+        IN WITNESS WHEREOF, RELEASOR has executed this RELEASE the day and year first above written.
+      </p>
+    </div>
+
+    <!-- IMPORTANT:
+         This uses FormSubmit to email the form to your address.
+         Replace the action email below.
+    -->
+    <form id="waiverForm" method="POST" action="https://formsubmit.co/carlos.vazquez-arizpe@us.af.mil">
+      <!-- FormSubmit options -->
+      <input type="hidden" name="_subject" value="New Waiver Submission" />
+      <input type="hidden" name="_captcha" value="false" />
+      <input type="hidden" name="_template" value="table" />
+
+      <!-- Our hidden fields -->
+      <input type="hidden" name="signature_base64_png" id="signature_base64_png" />
+      <input type="hidden" name="signed_timestamp_local" id="signed_timestamp_local" />
+      <input type="hidden" name="kiosk_token_used" id="kiosk_token_used" />
+
+      <div class="row">
+        <div>
+          <label for="fullName">Full Legal Name</label>
+          <input id="fullName" name="full_name" required autocomplete="name" />
+        </div>
+        <div>
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" required autocomplete="email" />
+        </div>
+      </div>
+
+      <label for="address">Address</label>
+      <textarea id="address" name="address" required autocomplete="street-address"></textarea>
+
+      <div class="checkline">
+        <input id="agree" type="checkbox" required />
+        <label for="agree" style="margin:0;font-weight:600;">
+          I have read and agree to the waiver terms above. I understand this is an electronic signature.
+        </label>
+      </div>
+
+      <label>Signature (draw with finger)</label>
+      <div class="sigbox">
+        <canvas id="sigCanvas"></canvas>
+        <div class="btnrow">
+          <button type="button" class="secondary" id="clearBtn">Clear signature</button>
+        </div>
+        <div class="small">Tip: Sign as you would normally. Clearing is allowed before submission.</div>
+      </div>
+
+      <div class="btnrow">
+        <button type="submit" class="primary">Submit Waiver</button>
+      </div>
+
+      <div id="msg" class="warn" style="display:none;"></div>
+      <div class="small" style="margin-top:12px;">
+        After submission, you may receive an email confirmation depending on configuration.
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+(() => {
+  // ====== CONFIG ======
+  const KIOSK_TOKEN = "chapel"; // CHANGE THIS
+  // ====================
+
+  const params = new URLSearchParams(location.search);
+  const token = (params.get("k") || "").trim();
+
+  const blocked = document.getElementById("blocked");
+  const app = document.getElementById("app");
+
+  if (token !== KIOSK_TOKEN) {
+    blocked.style.display = "block";
+    return;
+  }
+  app.style.display = "block";
+
+  // Store token used (for audit trail)
+  document.getElementById("kiosk_token_used").value = token;
+
+  // Signature canvas setup
+  const canvas = document.getElementById("sigCanvas");
+  const ctx = canvas.getContext("2d");
+
+  function resizeCanvas() {
+    // Match internal resolution to displayed size for cleaner signature
+    const rect = canvas.getBoundingClientRect();
+    const ratio = Math.max(window.devicePixelRatio || 1, 1);
+    canvas.width = Math.floor(rect.width * ratio);
+    canvas.height = Math.floor(rect.height * ratio);
+    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    ctx.lineWidth = 2.2;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = "#111827";
+  }
+
+  // Initial sizing after paint
+  requestAnimationFrame(resizeCanvas);
+  window.addEventListener("resize", () => {
+    // Note: resizing clears canvas; acceptable for kiosk
+    resizeCanvas();
+    hasInk = false;
+  });
+
+  let drawing = false;
+  let hasInk = false;
+
+  function getPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const touch = e.touches && e.touches[0];
+    const clientX = touch ? touch.clientX : e.clientX;
+    const clientY = touch ? touch.clientY : e.clientY;
+    return { x: clientX - rect.left, y: clientY - rect.top };
+  }
+
+  function start(e) {
+    e.preventDefault();
+    drawing = true;
+    const p = getPos(e);
+    ctx.beginPath();
+    ctx.moveTo(p.x, p.y);
+  }
+
+  function move(e) {
+    if (!drawing) return;
+    e.preventDefault();
+    const p = getPos(e);
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+    hasInk = true;
+  }
+
+  function end(e) {
+    if (!drawing) return;
+    e.preventDefault();
+    drawing = false;
+    ctx.closePath();
+  }
+
+  canvas.addEventListener("mousedown", start);
+  canvas.addEventListener("mousemove", move);
+  canvas.addEventListener("mouseup", end);
+  canvas.addEventListener("mouseleave", end);
+
+  canvas.addEventListener("touchstart", start, { passive: false });
+  canvas.addEventListener("touchmove", move, { passive: false });
+  canvas.addEventListener("touchend", end, { passive: false });
+
+  document.getElementById("clearBtn").addEventListener("click", () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    hasInk = false;
+  });
+
+  // Form submit validation + embed signature
+  const form = document.getElementById("waiverForm");
+  const msg = document.getElementById("msg");
+
+  form.addEventListener("submit", (e) => {
+    msg.style.display = "none";
+    msg.textContent = "";
+
+    if (!hasInk) {
+      e.preventDefault();
+      msg.textContent = "Please provide a signature before submitting.";
+      msg.style.display = "block";
+      return;
+    }
+
+    const now = new Date();
+    document.getElementById("signed_timestamp_local").value = now.toString();
+
+    // Convert to PNG data URL (small)
+    const dataUrl = canvas.toDataURL("image/png");
+    // Strip the prefix to reduce size and make parsing easier
+    const base64 = dataUrl.replace(/^data:image\/png;base64,/, "");
+    document.getElementById("signature_base64_png").value = base64;
+
+    // If you want to prevent repeat submissions on the same kiosk session:
+    // sessionStorage.setItem("submitted", "1");
+  });
+})();
+</script>
+</body>
+</html>
