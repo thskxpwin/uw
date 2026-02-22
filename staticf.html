@@ -80,8 +80,14 @@
       </div>
 
       <label for="address">Address</label>
-      <textarea id="address" name="address" required autocomplete="street-address"></textarea>
-
+<input
+  id="address"
+  name="address"
+  type="text"
+  required
+  autocomplete="street-address"
+  maxlength="150"
+/>
       <div class="checkline">
         <input id="agree" type="checkbox" required />
         <label for="agree" style="margin:0;font-weight:600;">
