@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Waiver Submitted</title>
+
+<style>
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f4f6f8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.card {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,.1);
+  text-align: center;
+  max-width: 400px;
+}
+
+h1 {
+  margin-top: 0;
+  color: #0b5fff;
+}
+
+.countdown {
+  font-size: 32px;
+  font-weight: bold;
+  margin: 20px 0;
+}
+
+button {
+  padding: 12px 20px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: none;
+  background: #0b5fff;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #094dcc;
+}
+</style>
+
+</head>
+<body>
+
+<div class="card">
+
+<h1>Waiver Submitted Successfully</h1>
+
+<p>
+Thank you. Your waiver has been recorded.
+</p>
+
+<p>
+Returning to homepage in:
+</p>
+
+<div class="countdown" id="countdown">10</div>
+
+<button onclick="goNow()">Return Now</button>
+
+</div>
+
+<script>
+
+let seconds = 10;
+
+const countdownEl = document.getElementById("countdown");
+
+const timer = setInterval(() => {
+
+  seconds--;
+
+  countdownEl.textContent = seconds;
+
+  if (seconds <= 0) {
+    clearInterval(timer);
+    window.location.href = "index.html";
+  }
+
+}, 1000);
+
+function goNow() {
+  window.location.href = "index.html";
+}
+
+</script>
+
+</body>
+</html>
