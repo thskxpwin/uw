@@ -19,7 +19,10 @@
       display: block;
       background: #e9ecf2;
     }
-    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding: 16px; }
+
+    /* Center the single visitor button */
+    .actions { display: flex; justify-content: center; padding: 16px; }
+
     .btn {
       display: inline-flex;
       align-items: center;
@@ -37,33 +40,47 @@
     }
     .btn:active { transform: translateY(1px); }
     .btn.primary { background: #0b5fff; border-color: #0b5fff; color: #fff; }
-    .btn.secondary { background: #f3f5f9; }
+
     .note { padding: 0 16px 18px; color: #555; font-size: 13px; }
-    footer { text-align: center; padding: 18px 16px 28px; color: #666; font-size: 12px; }
-    @media (max-width: 720px) { .actions { grid-template-columns: 1fr; } .hero { height: 220px; } }
+
+    /* Less prominent staff area */
+    .staff-area {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 6px 16px 0;
+      text-align: center;
+    }
+    .staff-link {
+      background: transparent;
+      border: none;
+      color: #666;
+      font-size: 12px;
+      text-decoration: underline;
+      cursor: pointer;
+      padding: 8px 10px;
+      border-radius: 8px;
+    }
+    .staff-link:hover { color: #111; }
+
+    footer { text-align: center; padding: 14px 16px 28px; color: #666; font-size: 12px; }
+
+    @media (max-width: 720px) { .hero { height: 220px; } }
   </style>
 </head>
 <body>
   <header>
     <h1>USAFA Chapel Visitor Log</h1>
-    <p>Visitors: submit your waiver. Staff: request an updated waiver list.</p>
+    <p>Visitors: submit your waiver.</p>
   </header>
 
   <div class="wrap">
     <div class="card">
-      <!-- Put an image named "chapel.jpg" in the same folder as this index.html (or change the filename here). -->
       <img class="hero" src="https://www.usafa.edu/app/uploads/49628307012_525e80a10c_o.jpg" alt="USAFA Chapel" />
 
       <div class="actions">
-        <!-- Visitors button -->
         <a class="btn primary" href="staticf.html?k=chapel">
           Visitor Waiver Form
         </a>
-
-        <!-- Staff button (NO email client; submits via StaticForms) -->
-        <button class="btn secondary" id="staffBtn" type="button">
-          Staff: Request Waivers List
-        </button>
       </div>
 
       <div class="note">
@@ -72,27 +89,26 @@
     </div>
   </div>
 
+  <!-- Staff button moved down and made less prominent -->
+  <div class="staff-area">
+    <button class="staff-link" id="staffBtn" type="button">
+      Staff: Request Waivers List
+    </button>
+  </div>
+
   <footer>
     © USAFA Chapel
   </footer>
 
   <script>
-    // StaticForms config
-    // 1) Replace with your StaticForms access key.
-    // 2) Make sure StaticForms is configured to deliver to your USAF inbox for the "staff request" emails.
     const STATICFORMS_ACCESS_KEY = "PASTE_YOUR_STATICFORMS_ACCESS_KEY_HERE";
-
-    // Email subject that your separate Power Automate flow will watch for
     const STAFF_SUBJECT = "Updated waivers list request";
-
-    // Optional: add a token so you can filter these in email/flows if you want later
     const STAFF_TOKEN = "staff_waivers_export_request";
 
     async function requestWaiversList() {
       const ok = confirm("Send request for an updated waivers list?");
       if (!ok) return;
 
-      // Basic guard if you forgot to paste the key
       if (!STATICFORMS_ACCESS_KEY || STATICFORMS_ACCESS_KEY.includes("PASTE_YOUR_STATICFORMS_ACCESS_KEY_HERE")) {
         alert("StaticForms access key is not set in index.html yet.");
         return;
@@ -105,7 +121,6 @@
           body: JSON.stringify({
             accessKey: STATICFORMS_ACCESS_KEY,
             subject: STAFF_SUBJECT,
-            // These fields become the email body content you’ll parse in Power Automate
             message: "Staff requested an updated waivers list.",
             token: STAFF_TOKEN,
             requested_at_utc: new Date().toISOString()
@@ -115,7 +130,6 @@
         if (res.ok) {
           alert("Request sent successfully.");
         } else {
-          // StaticForms sometimes returns JSON; keep it simple for now
           alert("Request failed to send. Please try again or contact staff.");
         }
       } catch (e) {
